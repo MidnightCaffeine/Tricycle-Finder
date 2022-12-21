@@ -31,8 +31,8 @@ if (isset($_POST['delete'])) {
 <html lang="en">
 
 <?php
-    include 'includes/head.php';
-    ?>
+include 'includes/head.php';
+?>
 
 
 <body>
@@ -43,21 +43,18 @@ if (isset($_POST['delete'])) {
     ?>
     <main id="main" class="main">
         <div class="pagetitle">
-            <h1>Manage Users</h1>
+            <h1>Manage Commuters</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">Home</li>
                     <li class="breadcrumb-item">Manage</li>
-                    <li class="breadcrumb-item active">Users</li>
+                    <li class="breadcrumb-item active">Commuters</li>
                 </ol>
             </nav>
         </div>
         <section class="section dashboard">
             <div class="row">
                 <div class="d-flex align-items-center mt-3 mb-2">
-
-                    <!-- add trigger modal -->
-                    <a type="button" class="btn btn-primary ms-auto mb-2" href="addUser.php"><i class='bx bx-user-plus'></i> Add User</a>
                 </div>
                 <table id="usersTable" class="display table table-bordered">
                     <thead>
@@ -123,7 +120,7 @@ if (isset($_POST['delete'])) {
             pagingType: 'full_numbers',
             responsive: true,
             columnDefs: [{
-                'targets': [0, 2, 3, 4, 5,6],
+                'targets': [0, 2, 3, 4, 5, 6],
                 /* column index */
 
                 'orderable': false,

@@ -28,10 +28,14 @@ include 'includes/side_nav.php';
                   <div id="map"> </div>
                </div>
             </div>
+
+            <input id="distance" readonly>
+            <input id="timeElapsed" readonly>
+
          <?php
          }elseif ($_SESSION['position'] == 'Administrator') {
             include 'lib/admin_dash.php';
-         }elseif ($_SESSION['position'] == 'Co-Admin') {
+         }elseif ($_SESSION['position'] == 'TODA-Admin') {
             include 'lib/coAdmin_dash.php';
          }
          ?>
