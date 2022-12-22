@@ -44,9 +44,10 @@ if (isset($_POST['book_now'])) {
    $name = $_POST['fullname'];
    $distance = $_POST['distance'];
    $fare = $_POST['fare'];
-   $desination = $_POST['place'];
+   $destination = $_POST['place'];
 
    $id = $_SESSION['username'];
+   $booking_status = 'pending';
 
    $select = $pdo->prepare("SELECT phone_number FROM user_list WHERE username='$id'");
    $select->execute();
@@ -55,7 +56,7 @@ if (isset($_POST['book_now'])) {
       $phone = $row['phone_number'];
    }
 
-   $insert = $pdo->prepare("INSERT into bookings(client_name, origin_latitude, origin_longitude, destination_latitude, destination_longitude, client_phone, driver_name, driver_phone, fare, toda, plate_number, mtop) values(:name, :originLatitude , :originLongitude, :destinationLatitude, :destinationLongitude, :phone, :driver_name, :phone_number, :fare ,:toda, :plate, :mtop)");
+   $insert = $pdo->prepare("INSERT into bookings(client_name, origin_latitude, origin_longitude, destination_latitude, destination_longitude, client_phone, driver_name, driver_phone, fare, toda, plate_number, mtop, booking_status, destination_details) values(:name, :originLatitude , :originLongitude, :destinationLatitude, :destinationLongitude, :phone, :driver_name, :phone_number, :fare ,:toda, :plate, :mtop, :booking_status, :destination)");
 
    $insert->bindParam(':name', $name);
    $insert->bindParam(':originLatitude', $originLatitude);
@@ -69,6 +70,8 @@ if (isset($_POST['book_now'])) {
    $insert->bindParam(':toda', $toda);
    $insert->bindParam(':plate', $plate);
    $insert->bindParam(':mtop', $mtop);
+   $insert->bindParam(':booking_status', $booking_status);
+   $insert->bindParam(':destination', $destination);
    if($insert->execute()){
       $update = $pdo->prepare("UPDATE `queuing` SET `que_status` = 'Done' WHERE `queuing`.`que_id` = '$que_id'");
       $update->execute();
@@ -84,7 +87,6 @@ if (isset($_POST['book_now'])) {
 <?php
 date_default_timezone_set('Asia/Manila');
 $page = 'Home';
-session_start();
 include 'lib/connection.php';
 include 'includes/head.php';
 include 'includes/navigation.php';
@@ -103,71 +105,36 @@ include 'includes/side_nav.php';
    <section class="section dashboard">
       <div class="row">
          <?php
-         if ($_SESSION['position'] == 'User') { ?>
-
-
-            <div class="row">
-               <div class="col-sm-8">
-
-                  <div class="content-map">
-                     <div class="mappings">
-                        <div id="map"> </div>
-                     </div>
-                  </div>
-
-               </div>
-               <div class="col-sm-4">
-                  <div class="card mb-3">
-                     <div class="card-body">
-
-                        <form method="POST" action="">
-                           <div class="pt-2 pb-2">
-                              <h5 class="card-title text-center pb-0 fs-4">Book A Ride</h5>
-                           </div>
-                           <div class="col-12 mb-2">
-                              <label for="fullname" class="form-label">Name</label>
-                              <input type="text" name="fullname" class="form-control" id="fullname" value="<?php echo $_SESSION['fullname'] ?>" readonly>
-                              <div class="invalid-feedback">Please, enter your Firstname!</div>
-                           </div>
-
-                           <div class="col-12 mb-2">
-                              <label for="distance" class="form-label">Distance</label>
-                              <input type="text" name="distance" class="form-control" id="distance" readonly>
-                              <div class="invalid-feedback">Please enter a valid Email adddress!</div>
-                           </div>
-                           <div class="col-12 mb-2">
-                              <label for="fare" class="form-label">Fare</label>
-                              <div class="input-group flex-nowrap">
-                                 <span class="input-group-text" id="pesoSign">₱</span>
-                                 <input type="text" class="form-control" aria-label="fare" aria-describedby="pesoSign" name="fare" id="fare" readonly>
-                              </div>
-                           </div>
-
-                           <div class="col-12 mb-3">
-                              <label for="place" class="form-label">Destination</label>
-                              <input type="text" name="place" class="form-control" id="place" readonly>
-                              <div class="invalid-feedback">Please enter a valid Email adddress!</div>
-                           </div>
-
-                           <input type="text" name="endcoordinates" class="form-control" id="endcoordinates" hidden>
-                           <input type="text" name="startcoordinates" class="form-control" id="startcoordinates" hidden>
-
-                           <div class="d-grid gap-2 mt-2">
-                              <button type="submit" class="btn btn-success" name="book_now">Book</button>
-                           </div>
-
-                        </form>
-
-                     </div>
-                  </div>
-               </div>
-            </div>
-
-         <?php
+         if ($_SESSION['position'] == 'User') {
+            include 'lib/user_map.php';
+            
          } elseif ($_SESSION['position'] == 'Administrator') {
             include 'lib/admin_dash.php';
          } elseif ($_SESSION['position'] == 'TODA-Admin') {
             include 'lib/coAdmin_dash.php';
+         }elseif($_SESSION['position'] == 'Driver'){?>
+
+            <div class="col-6 mb-4">
+                <div class="card">
+                    <h4 class="card-title ms-4">Pending Bookings</h4>
+                    <p class="card-text ms-4">View details of pending bookings.</p>
+                    <div class="d-grid gap-2 ms-4 mb-4 me-4">
+                        <a class="btn btn-primary" href="pending_bookings.php">View Pending Bookings</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="card">
+                    <div class="card-block">
+                        <h4 class="card-title ms-4">Successfull Bookings</h4>
+                        <p class="card-text ms-4">View detals of successfull bookings.</p>
+                        <div class="d-grid gap-2 ms-4 mb-4 me-4">
+                            <a class="btn btn-primary" href="successfullBookings.php">View Successfull Bookings</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<?php
          }
          ?>
       </div>

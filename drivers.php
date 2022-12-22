@@ -95,7 +95,7 @@ include 'includes/head.php';
                                 </td>
 
                                 <?php
-                                if ($_SESSION['position'] == 'Administrator' || $_SESSION['position'] == 'Co-Admin') { ?>
+                                if ($_SESSION['position'] == 'Administrator') { ?>
                                     <td>
                                         <?php
                                         $stdId = $row['user_id'];
@@ -175,7 +175,7 @@ include 'includes/head.php';
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form action="lib/student/deleteStudent.php" method="post">
+                    <form action="deletedriver.php" method="post">
                         <input type="hidden" name="id" value="<?php echo $stdId; ?>">
                         <button type="submit" name="delete" class="btn btn-danger">Delete</button>
                     </form>

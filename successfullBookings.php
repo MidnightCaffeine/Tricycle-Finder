@@ -24,11 +24,11 @@ include 'includes/side_nav.php';
 ?>
 <main id="main" class="main">
     <div class="pagetitle">
-        <h1>Pending Bookings</h1>
+        <h1>Successfull Bookings</h1>
         <nav>
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="home.php">Home</a></li>
-                <li class="breadcrumb-item active">Pending Bookings</li>
+                <li class="breadcrumb-item active">Successfull Bookings</li>
             </ol>
         </nav>
     </div>
@@ -46,29 +46,25 @@ include 'includes/side_nav.php';
                         <th scope="col">Plate Number</th>
                         <th scope="col">MTOP</th>
                         <th scope="col">TODA</th>
-                        <th scope="col">Action</th>
                     </tr>
                 </thead>
                 <tbody>
 
                     <?php
-                    $name = '' . $_SESSION['fullname'];
-
+                    $name = ''.$_SESSION['fullname'];
                     if ($_SESSION['position'] == 'User') {
-                        $select = $pdo->prepare("SELECT * FROM `bookings` WHERE `booking_status` = 'pending' AND `client_name` = '$name' ORDER BY booking_id ASC");
-                    } elseif ($_SESSION['position'] == 'Driver') {
-                        $select = $pdo->prepare("SELECT * FROM `bookings` WHERE `booking_status` = 'pending' AND `driver_name` = '$name' ORDER BY booking_id ASC");
+                        $select = $pdo->prepare("SELECT * FROM `bookings` WHERE `booking_status` = 'success' AND `client_name` = '$name' ORDER BY booking_id ASC");
+                    }elseif ($_SESSION['position'] == 'Driver') {
+                        $select = $pdo->prepare("SELECT * FROM `bookings` WHERE `booking_status` = 'success' AND `driver_name` = '$name' ORDER BY booking_id ASC");
                     }else{
-                        $select = $pdo->prepare("SELECT * FROM `bookings` WHERE `booking_status` = 'pending' ORDER BY booking_id ASC");
+                        $select = $pdo->prepare("SELECT * FROM `bookings` WHERE `booking_status` = 'success' ORDER BY booking_id ASC");
                     }
-
-
-
                     $select->execute();
 
                     $count = 0;
                     while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
                         $count++;
+
                     ?>
                         <tr>
                             <form method="POST">
@@ -79,22 +75,7 @@ include 'includes/side_nav.php';
                                 <td><?php echo $row['driver_name']; ?></td>
                                 <td><?php echo $row['plate_number']; ?></td>
                                 <td><?php echo $row['mtop']; ?></td>
-                                <td><?php $toda = $row['toda'];
-                                    echo strtoupper($toda); ?></td>
-                                <td>
-                                    <?php
-                                    if ($_SESSION['position'] == 'Driver') { ?>
-                                        <a type="submit" href="driver_map.php?id=<?php echo $row['booking_id'];?>&originLat=<?php echo $row['origin_latitude'];?>&originLng=<?php echo $row['origin_longitude'];?>&destLat=<?php echo $row['destination_latitude'];?>&destLng=<?php echo $row['destination_longitude'];?>" name="completeBooking" class="btn btn-dark" data-toggle="tooltip" title="Complete">
-                                            <i class="bi bi-pin-map-fill"></i>
-                                            View Map
-                                        </a>
-                                    <?php
-                                    } elseif ($_SESSION['position'] == 'User') { ?>
-                                        <button type="submit" name="completeBooking" class="btn btn-success" data-toggle="tooltip" title="Complete"><i class="bi bi-check-all"></i>Complete</button>
-                                    <?php
-                                    }
-                                    ?>
-                                </td>
+                                <td><?php echo $row['toda']; ?></td>
                             </form>
                         </tr>
 

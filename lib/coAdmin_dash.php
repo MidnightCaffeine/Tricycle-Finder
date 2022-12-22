@@ -59,7 +59,7 @@ if (isset($_POST['addQue'])) {
             <tbody>
 
                <?php
-               $userlog = $pdo->prepare("SELECT * FROM `queuing` WHERE status='Available' ORDER BY que_id ASC");
+               $userlog = $pdo->prepare("SELECT * FROM `queuing` WHERE que_status='Available' ORDER BY que_id ASC");
                $userlog->execute();
                while ($row = $userlog->fetch(PDO::FETCH_ASSOC)) { ?>
                   <tr>

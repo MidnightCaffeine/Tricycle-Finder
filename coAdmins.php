@@ -10,26 +10,27 @@ if (!isset($_SESSION['username'])) {
     header("Location: index.php");
 }
 
+
 if (isset($_POST['delete'])) {
     $id = $_POST['id'];
-    $delete = $pdo->prepare("DELETE FROM `client_list` WHERE user_id='$id' ");
+    $delete = $pdo->prepare("DELETE FROM `admin_toda` WHERE admin_id='$id' ");
     $delete->execute();
     $delete = $pdo->prepare("DELETE FROM `user_list` WHERE user_id='$id' ");
     if ($delete->execute()) {
 
         $_SESSION['status'] = "dsuccess";
 
-        header("location: users.php");
+        header("location: coAdmins.php");
     } else {
         echo '<script> alert("Data Not Deleted"); </script>';
     }
 }
 
+
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <?php
 include 'includes/head.php';
 ?>
@@ -39,32 +40,36 @@ include 'includes/head.php';
     <?php
     include 'includes/navigation.php';
     include 'includes/side_nav.php';
-
     ?>
     <main id="main" class="main">
         <div class="pagetitle">
-            <h1>Manage Commuters</h1>
+            <h1>Manage Drivers</h1>
             <nav>
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">Home</li>
                     <li class="breadcrumb-item">Manage</li>
-                    <li class="breadcrumb-item active">Commuters</li>
+                    <li class="breadcrumb-item active">Driver</li>
                 </ol>
             </nav>
         </div>
         <section class="section dashboard">
             <div class="row">
-                <div class="d-flex align-items-center mt-3 mb-2">
-                </div>
-                <table id="usersTable" class="display table table-bordered">
+
+
+                <?php
+                if ($_SESSION['position'] == 'Administrator') { ?>
+                    <div class="d-flex align-items-center mt-3 mb-2">
+                        <a type="button" class="btn btn-primary ms-auto mb-2" href="addAdmin.php"><i class='bx bx-user-plus'></i> Add TODA - Admin</a>
+                    </div>
+                <?php
+                }
+                ?>
+
+                <table id="Ridertable" class="display table table-bordered">
                     <thead>
                         <tr>
-                            <th>User ID</th>
-                            <th>Lastname</th>
-                            <th>Firstname</th>
-                            <th>Middlename</th>
-                            <th>Suffix</th>
-                            <th>Gender</th>
+                            <th>TODA Admin ID</th>
+                            <th>TODA</th>
                             <?php
                             if ($_SESSION['position'] == 'Administrator') { ?>
                                 <th>Delete</th>
@@ -75,48 +80,51 @@ include 'includes/head.php';
                     </thead>
                     <tbody class="table-group-divider">
                         <?php
-                        $select = $pdo->prepare("SELECT * FROM client_list  ORDER BY user_id ASC");
+
+                        $select = $pdo->prepare("SELECT * FROM admin_toda  ORDER BY admin_id ASC");
 
                         $select->execute();
                         while ($row = $select->fetch(PDO::FETCH_ASSOC)) {
                         ?>
                             <tr>
-                                <td><?php echo $row["user_id"]; ?></td>
-                                <td><?php echo $row["client_lastname"]; ?></td>
-                                <td><?php echo $row["client_firstname"]; ?></td>
-                                <td><?php echo $row["client_middlename"]; ?></td>
-                                <td><?php echo $row["client_suffix"]; ?></td>
-                                <td><?php echo $row["gender"]; ?></td>
+                                <td><?php echo $row["admin_id"]; ?></td>
+                                <td><?php echo $row["toda"]; ?></td>
+
 
                                 <?php
                                 if ($_SESSION['position'] == 'Administrator') { ?>
                                     <td>
                                         <?php
-                                        $stdId = $row['user_id'];
+                                        $stdId = $row['admin_id'];
                                         ?>
                                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#myModal" data-toggle="tooltip" title="Delete"><i class="bi bi-trash"></i></button>
                                     </td>
-
-
-                            </tr> <?php }
+                            </tr>
+                    <?php
+                                }
                             }
-                                    ?>
+                    ?>
                     </tbody>
                 </table>
             </div>
         </section>
     </main>
-    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
     <?php
     include 'includes/footer.php';
+    ?>
+    <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+    <?php
     include 'includes/script_list.php';
     ?>
+
     <script>
-        $('#usersTable').DataTable({
+        $('#Ridertable').DataTable({
             pagingType: 'full_numbers',
             responsive: true,
             columnDefs: [{
-                'targets': [0, 2, 3, 4, 5, 6],
+                'targets': [0, 2, 3, 4, 5, 6, 7],
                 /* column index */
 
                 'orderable': false,
@@ -164,7 +172,7 @@ include 'includes/head.php';
                 </div>
                 <div class="modal-footer justify-content-center">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <form action="users.php" method="post">
+                    <form action="coAdmins.php" method="post">
                         <input type="hidden" name="id" value="<?php echo $stdId; ?>">
                         <button type="submit" name="delete" class="btn btn-danger">Delete</button>
                     </form>
