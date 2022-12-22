@@ -15,6 +15,9 @@ if (isset($_POST['addQue'])) {
 ?>
 
 <div class="col-lg-8">
+
+
+
    <div class="row">
       <div class="col-xxl-4 col-md-6">
          <div class="card info-card sales-card">

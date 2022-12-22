@@ -18,8 +18,6 @@
 
                     <?php if ($_SESSION['position'] == 'Administrator') { ?>
                         <li> <a href="users.php"> <i class="bi bi-circle"></i><span>Commuters</span> </a></li>
-                        <li class="nav-heading">Pages</li>
-                        <li> <a href="fare.php"> <i class="bi bi-circle"></i><span>Fare</span> </a></li>
 
                     <?php
                     }

@@ -75,6 +75,7 @@ if (isset($_POST['book_now'])) {
    if($insert->execute()){
       $update = $pdo->prepare("UPDATE `queuing` SET `que_status` = 'Done' WHERE `queuing`.`que_id` = '$que_id'");
       $update->execute();
+      header("LOCATION: pending_bookings.php");
    }
 
 }
