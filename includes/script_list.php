@@ -82,8 +82,13 @@
         })
         .then((response) => {
           me.directionsRenderer.setDirections(response);
+
           document.getElementById("distance").value = response.routes[0].legs[0].distance.text;
-          document.getElementById("timeElapsed").value = response.routes[0].legs[0].duration.text;
+          var cptDistance = response.routes[0].legs[0].distance.text;
+          var faretemp = cptDistance.split(' ');
+          document.getElementById("fare").value = Math.ceil(faretemp[0] * 9.2);
+          document.getElementById("startcoordinates").value = response.routes[0].legs[0].start_location;
+          document.getElementById("endcoordinates").value = response.routes[0].legs[0].end_location;
         })
         .catch((e) => window.alert("Directions request failed due to " + status));
     }
@@ -99,13 +104,13 @@
           place.geometry &&
           place.geometry.location
         ) {
+          document.getElementById("place").value = place.name;
           me.infowindow.close();
           me.infowindow.setPosition(place.geometry.location);
           me.infowindowContent.children["place-icon"].src = place.icon;
           me.infowindowContent.children["place-name"].textContent = place.name;
           me.infowindowContent.children["place-id"].textContent = place.place_id;
-          me.infowindowContent.children["place-address"].textContent =
-            place.formatted_address;
+          me.infowindowContent.children["place-address"].textContent = place.formatted_address;
           me.infowindow.open(me.map);
         }
       });

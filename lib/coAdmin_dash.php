@@ -1,3 +1,19 @@
+<?php
+if (isset($_POST['addQue'])) {
+   $status = 'Available';
+   $dId = $_POST['id'];
+   $fullname = $_POST['fullname'];
+
+   $insert = $pdo->prepare("INSERT into queuing(driver_name, driver_id, que_status) values(:name, :id ,:status)");
+
+   $insert->bindParam(':name', $fullname);
+   $insert->bindParam(':id', $dId);
+   $insert->bindParam(':status', $status);
+   $insert->execute();
+}
+
+?>
+
 <div class="col-lg-8">
    <div class="row">
       <div class="col-xxl-4 col-md-6">
@@ -25,6 +41,84 @@
          </div>
       </div>
    </div>
+
+   <div class="row">
+      <div class="col-sm-4">
+
+         <div class="pt-2 pb-2">
+            <h5 class="card-title text-center pb-0 fs-4">Que List</h5>
+         </div>
+
+         <table id="quelist" class="display table table-bordered">
+            <thead>
+               <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+               </tr>
+            </thead>
+            <tbody>
+
+               <?php
+               $userlog = $pdo->prepare("SELECT * FROM `queuing` WHERE status='Available' ORDER BY que_id ASC");
+               $userlog->execute();
+               while ($row = $userlog->fetch(PDO::FETCH_ASSOC)) { ?>
+                  <tr>
+                     <td><?php echo $row['driver_id']; ?></td>
+                     <td><?php echo $row['driver_name']; ?></td>
+                  </tr>
+               <?php
+               }
+               ?>
+
+            </tbody>
+         </table>
+
+      </div>
+      <div class="col-sm-8">
+         <div class="card mb-3">
+            <div class="card-body">
+
+               <div class="pt-2 pb-2">
+                  <h5 class="card-title text-center pb-0 fs-4">Add to Que</h5>
+               </div>
+
+               <table id="que" class="display table table-bordered">
+                  <thead>
+                     <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">add</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+
+                     <?php
+                     $userlog = $pdo->prepare("SELECT * FROM `driver_list` WHERE driver_firstname!='admin' ORDER BY user_id ASC");
+                     $userlog->execute();
+                     while ($row = $userlog->fetch(PDO::FETCH_ASSOC)) {
+                        $name = $row['driver_firstname'] . ' ' . $row['driver_middlename'] . ' ' . $row['driver_lastname'];
+
+                     ?>
+                        <tr>
+                           <form method="POST">
+                              <td><?php echo $row['user_id']; ?> <input name="id" value="<?php echo $row['user_id']; ?>" hidden></td>
+                              <td><?php echo $name; ?> <input name="fullname" value="<?php echo $name; ?>" hidden></td>
+                              <td><button type="submit" name="addQue" class="btn btn-success" data-toggle="tooltip" title="Add To Que"><i class="bi bi-bookmark-plus"></i></button></td>
+                           </form>
+                        </tr>
+
+                     <?php
+                     }
+                     ?>
+
+                  </tbody>
+               </table>
+
+            </div>
+         </div>
+      </div>
+   </div>
+
 </div>
 <!--History Logs-->
 <div class="col-lg-4">
@@ -49,6 +143,56 @@
             <?php
             }
             ?>
+         </div>
+      </div>
+   </div>
+</div>
+
+
+
+<script>
+   $('#que').DataTable({
+      pagingType: 'full_numbers',
+      responsive: true,
+      columnDefs: [{
+         'targets': [0, 2, 3, 4, 5],
+         /* column index */
+
+         'orderable': false,
+         /* true or false */
+      }, ],
+   });
+   $('#quelist').DataTable({
+      pagingType: 'full_numbers',
+      responsive: true,
+      columnDefs: [{
+         'targets': [0, 2, 3, 4, 5],
+         /* column index */
+
+         'orderable': false,
+         /* true or false */
+      }, ],
+   });
+</script>
+
+<div id="myModal" class="modal fade">
+   <div class="modal-dialog modal-confirm  modal-dialog-centered">
+      <div class="modal-content">
+         <div class="modal-header flex-column">
+            <div class="icon-box">
+               <i class="material-icons">&#xE5CD;</i>
+            </div>
+            <h4 class="modal-title w-100">Are you sure?</h4>
+         </div>
+         <div class="modal-body">
+            <p>Do you really want to delete these records? This process cannot be undone.</p>
+         </div>
+         <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+            <form action="lib/student/deleteStudent.php" method="post">
+               <input type="hidden" name="id" value="<?php echo $stdId; ?>">
+               <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+            </form>
          </div>
       </div>
    </div>

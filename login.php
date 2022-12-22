@@ -29,6 +29,7 @@ if (isset($_POST['btn_login'])) {
       if ($row['email'] == $useremail or $row['username'] == $useremail) {
          $_SESSION['myid'] = $row['user_id'];
          $id = $row['user_id'];
+         $_SESSION['myID'] = $row['user_id']; 
          $_SESSION['username'] = $row['username'];
          $_SESSION['email'] = $row['email'];
          $_SESSION['position'] = $row['position'];
@@ -52,7 +53,7 @@ if (isset($_POST['btn_login'])) {
                $lname = $row["client_lastname"];
                $id = $row['user_id'];
             }
-            $_SESSION['myID'] = $id; 
+
             $_SESSION['fullname'] = $firstname . " " . $mname . " " . $lname;
          } elseif ($row["position"] == "Driver") {
             $selectYou = $pdo->prepare("SELECT * from `driver_list` where user_id = '$id'");
@@ -64,9 +65,8 @@ if (isset($_POST['btn_login'])) {
                $toda = $row['toda'];
                $id = $row['user_id'];
             }
-            $_SESSION['myID'] = $id; 
             $_SESSION['fullname'] = $firstname . " " . $mname . " " . $lname;
-         } elseif ($row["position"] == "Co-Admin") {
+         } elseif ($row["position"] == "TODA-Admin") {
             $selectYou = $pdo->prepare("SELECT * from `driver_list` where user_id = '$id'");
             $selectYou->execute();
             while ($row = $selectYou->fetch(PDO::FETCH_ASSOC)) {
@@ -76,7 +76,6 @@ if (isset($_POST['btn_login'])) {
                $toda = $row['toda'];
                $id = $row['user_id'];
             }
-            $_SESSION['myID'] = $id; 
             $_SESSION['fullname'] = $firstname . " " . $mname . " " . $lname;
             $_SESSION['toda'] = $toda;
          } else {
