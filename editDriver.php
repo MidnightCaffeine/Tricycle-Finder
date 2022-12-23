@@ -2,6 +2,12 @@
 include 'lib/connection.php';
 session_start();
 
+if (!isset($_SESSION['username'])) {
+    session_unset();
+    session_write_close();
+    session_destroy();
+    header("Location: index.php");
+}
 
 $page = 'Edit Driver';
 

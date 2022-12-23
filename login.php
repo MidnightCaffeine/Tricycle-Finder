@@ -5,6 +5,9 @@
 <?php
 include_once 'lib/connection.php';
 session_start();
+if(isset($_SESSION['username'])){
+   header("LOCATION: home.php");
+ }
 
 $page = 'Login';
 

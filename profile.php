@@ -14,7 +14,6 @@ if (!isset($_SESSION['username'])) {
 
 <?php
 $page = 'My Profile';
-session_start();
 include 'includes/head.php';
 include 'includes/navigation.php';
 include 'includes/side_nav.php';

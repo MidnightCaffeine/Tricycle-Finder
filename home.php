@@ -1,7 +1,16 @@
+<script src="assets/js/jquery-3.4.1.min.js"></script>
+<script src="assets/js/jquery.validate.js"></script>
+
 <?php
 include 'lib/connection.php';
 session_start();
 
+if (!isset($_SESSION['username'])) {
+   session_unset();
+   session_write_close();
+   session_destroy();
+   header("Location: index.php");
+}
 
 
 if (isset($_POST['book_now'])) {
@@ -72,12 +81,101 @@ if (isset($_POST['book_now'])) {
    $insert->bindParam(':mtop', $mtop);
    $insert->bindParam(':booking_status', $booking_status);
    $insert->bindParam(':destination', $destination);
-   if($insert->execute()){
+   if ($insert->execute()) {
       $update = $pdo->prepare("UPDATE `queuing` SET `que_status` = 'Done' WHERE `queuing`.`que_id` = '$que_id'");
-      $update->execute();
-      header("LOCATION: pending_bookings.php");
-   }
+      if ($update->execute()) {
 
+
+         echo '<script type="text/javascript">
+            jQuery(function validation() {
+
+               swal({
+                  title: "You Successfully Booked a Ride!!!",
+                  text: "Wait for your driver " + $d_name + " to arrive",
+                  icon: "success",
+                  button: "Redirecting to pending bookings",
+               });
+            });
+         </script>';
+
+
+         /*
+         *   Send an sms notification to the commutter 
+         *   
+         */
+         $key = "0F214580-B450-82F6-BA9A-A5BD236EE2F5";
+
+         $phoneNumber = $phone;
+
+         // Notification Message
+         $message = "Good day! 
+         Thankyou for booking on Trider. Your assigned tricycle driver will arrive in a minute in your location point." . "<br>" . "Here are some of the information of your driver:" . "<br>" . "Name: " . $d_name . "<br>" . "MTOP #: " . $mtop . "<br>" . "Plate Number: " . $plate . "<br>" . "Contact #: " . $phone_number;
+
+
+         $curl = curl_init();
+
+         curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=mjalgarne@gmail.com&key=0F214580-B450-82F6-BA9A-A5BD236EE2F5&to=" . $phoneNumber . "&senderid=Trider&message=" . $message . "",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_HTTPHEADER => array(
+               "authorization: " . $key,
+               "accept: */*",
+               "cache-control: no-cache",
+               "content-type: application/x-www-form-urlencoded"
+            ),
+         ));
+
+         $response = curl_exec($curl);
+         $err = curl_error($curl);
+
+         curl_close($curl);
+
+         /*
+         *   Send an sms notification to the driver 
+         *   
+         */
+
+         $phoneNumber = $phone_number;
+
+         // Notification Message
+         $message = "Good day! " . $d_name . "<br>" . $name . "Booked a ride to " . $destination . "<br>" . "This are the details of the ride" . "<br>" . "Commuter Name: " . $name . "<br>" . "Destination:  " . $destination . "<br>" . "Amount to pay: " . $fare . "<br>" . "Contact number: " . $phone . "<br>" . "Check your pending bookings for more details. Ride safe! ";
+
+
+         $curl = curl_init();
+
+         curl_setopt_array($curl, array(
+            CURLOPT_URL => "https://api-mapper.clicksend.com/http/v2/send.php?method=http&username=mjalgarne@gmail.com&key=0F214580-B450-82F6-BA9A-A5BD236EE2F5&to=" . $phoneNumber . "&senderid=Trider&message=" . $message . "",
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => "",
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_SSL_VERIFYHOST => 0,
+            CURLOPT_SSL_VERIFYPEER => 0,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => "POST",
+            CURLOPT_HTTPHEADER => array(
+               "authorization: " . $key,
+               "accept: */*",
+               "cache-control: no-cache",
+               "content-type: application/x-www-form-urlencoded"
+            ),
+         ));
+
+         $response = curl_exec($curl);
+         $err = curl_error($curl);
+
+         curl_close($curl);
+
+         header('refresh:0;pending_bookings.php');
+      }
+   }
 }
 
 ?>
@@ -108,34 +206,33 @@ include 'includes/side_nav.php';
          <?php
          if ($_SESSION['position'] == 'User') {
             include 'lib/user_map.php';
-            
          } elseif ($_SESSION['position'] == 'Administrator') {
             include 'lib/admin_dash.php';
          } elseif ($_SESSION['position'] == 'TODA-Admin') {
             include 'lib/coAdmin_dash.php';
-         }elseif($_SESSION['position'] == 'Driver'){?>
+         } elseif ($_SESSION['position'] == 'Driver') { ?>
 
             <div class="col-6 mb-4">
-                <div class="card">
-                    <h4 class="card-title ms-4">Pending Bookings</h4>
-                    <p class="card-text ms-4">View details of pending bookings.</p>
-                    <div class="d-grid gap-2 ms-4 mb-4 me-4">
-                        <a class="btn btn-primary" href="pending_bookings.php">View Pending Bookings</a>
-                    </div>
-                </div>
+               <div class="card">
+                  <h4 class="card-title ms-4">Pending Bookings</h4>
+                  <p class="card-text ms-4">View details of pending bookings.</p>
+                  <div class="d-grid gap-2 ms-4 mb-4 me-4">
+                     <a class="btn btn-primary" href="pending_bookings.php">View Pending Bookings</a>
+                  </div>
+               </div>
             </div>
             <div class="col-6">
-                <div class="card">
-                    <div class="card-block">
-                        <h4 class="card-title ms-4">Successfull Bookings</h4>
-                        <p class="card-text ms-4">View detals of successfull bookings.</p>
-                        <div class="d-grid gap-2 ms-4 mb-4 me-4">
-                            <a class="btn btn-primary" href="successfullBookings.php">View Successfull Bookings</a>
-                        </div>
-                    </div>
-                </div>
+               <div class="card">
+                  <div class="card-block">
+                     <h4 class="card-title ms-4">Successfull Bookings</h4>
+                     <p class="card-text ms-4">View detals of successfull bookings.</p>
+                     <div class="d-grid gap-2 ms-4 mb-4 me-4">
+                        <a class="btn btn-primary" href="successfullBookings.php">View Successfull Bookings</a>
+                     </div>
+                  </div>
+               </div>
             </div>
-<?php
+         <?php
          }
          ?>
       </div>
@@ -149,6 +246,8 @@ include 'includes/script_list.php';
 ?>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDhJTfM7zUxZ6B8DY0i2YMAksOs6huSJDs&libraries=places&callback=initMap" async defer></script>
 
+
+<script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 
 </html>

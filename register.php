@@ -7,6 +7,14 @@
 include_once 'lib/connection.php';
 $page = 'Register';
 
+session_start();
+
+
+if (isset($_SESSION['username'])) {
+
+   header("Location: home.php");
+}
+
 date_default_timezone_set('Asia/Manila');
 $d = date("Y-m-d");
 $t = date("h:i:s A");

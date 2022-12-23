@@ -3,6 +3,14 @@ include_once 'lib/connection.php';
 $page = "Manage User";
 session_start();
 
+
+if (!isset($_SESSION['username'])) {
+    session_unset();
+    session_write_close();
+    session_destroy();
+    header("Location: index.php");
+}
+
 if (!isset($_SESSION['username'])) {
     session_unset();
     session_write_close();

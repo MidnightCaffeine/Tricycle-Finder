@@ -3,6 +3,13 @@ session_start();
 include_once 'lib/connection.php';
 
 
+if (!isset($_SESSION['username'])) {
+    session_unset();
+    session_write_close();
+    session_destroy();
+    header("Location: index.php");
+}
+
 if (isset($_POST['delete'])) {
     $id = $_POST['id'];
     $delete = $pdo->prepare("DELETE FROM `driver_list` WHERE user_id='$id' ");

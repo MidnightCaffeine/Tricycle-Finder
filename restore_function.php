@@ -6,6 +6,14 @@ $d = date("Y-m-d");
 $t = date("h:i:s A");
 $page = 'Restore';
 session_start();
+
+if (!isset($_SESSION['username'])) {
+    session_unset();
+    session_write_close();
+    session_destroy();
+    header("Location: index.php");
+}
+
 include 'lib/connection.php';
 include 'includes/head.php';
 include 'includes/navigation.php';
