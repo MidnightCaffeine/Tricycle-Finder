@@ -24,7 +24,7 @@ if (isset($_POST['completeBooking'])) {
 <html lang="en">
 <?php
 date_default_timezone_set('Asia/Manila');
-$page = 'Home';
+$page = 'Pending Booking';
 include 'lib/connection.php';
 include 'includes/head.php';
 include 'includes/navigation.php';

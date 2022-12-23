@@ -1,6 +1,6 @@
 <?php
 include_once 'lib/connection.php';
-$page = "Manage User";
+$page = "Manage Toda Admin";
 session_start();
 
 

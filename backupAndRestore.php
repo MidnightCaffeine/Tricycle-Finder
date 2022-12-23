@@ -2,7 +2,7 @@
 <html lang="en">
 <?php
 date_default_timezone_set('Asia/Manila');
-$page = 'Home';
+$page = 'Backup And Restore';
 session_start();
 
 if (!isset($_SESSION['username'])) {
