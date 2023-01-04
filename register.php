@@ -28,15 +28,11 @@ if (isset($_POST['btn_signup'])) {
    $username = $_POST['username'];
    $email = $_POST['email'];
    $password = $_POST['password'];
-   $position = $_POST['position'];
    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
    $suffix = $_POST['suffix'];
    $gender = $_POST['sex'];
-   $plateNumber = $_POST['plateNumber'];
-   $license = $_POST['license'];
-   $toda = strtoupper($_POST['toda']);
-   $mtop = $_POST['mtop'];
    $phone = $_POST['phone'];
+   $position = 'User';
 
 
    //echo $username ."-".$useremail."-".$password."-".$userrole;
@@ -126,49 +122,23 @@ button: "Ok",
                $id = $row['user_id'];
             }
 
-            if ($_POST['position'] == 'User') {
-               $insert = $pdo->prepare("INSERT into client_list(user_id ,client_firstname,client_middlename ,client_lastname, client_suffix, gender ) values(:id, :firstname, :middlename, :lastname, :suffix , :gender)");
+            $insert = $pdo->prepare("INSERT into client_list(user_id ,client_firstname,client_middlename ,client_lastname, client_suffix, gender ) values(:id, :firstname, :middlename, :lastname, :suffix , :gender)");
 
-               $insert->bindParam(':id', $id);
-               $insert->bindParam(':firstname', $firstname);
-               $insert->bindParam(':middlename', $middlename);
-               $insert->bindParam(':lastname', $lastname);
-               $insert->bindParam(':suffix', $suffix);
-               $insert->bindParam(':gender', $gender);
-               if ($insert->execute()) {
-                  $insertLog = $pdo->prepare("INSERT INTO user_log(user_id, username, action, logDate, logTime) values(:id, :user, :action, :logDate, :logTime)");
+            $insert->bindParam(':id', $id);
+            $insert->bindParam(':firstname', $firstname);
+            $insert->bindParam(':middlename', $middlename);
+            $insert->bindParam(':lastname', $lastname);
+            $insert->bindParam(':suffix', $suffix);
+            $insert->bindParam(':gender', $gender);
+            if ($insert->execute()) {
+               $insertLog = $pdo->prepare("INSERT INTO user_log(user_id, username, action, logDate, logTime) values(:id, :user, :action, :logDate, :logTime)");
 
-                  $insertLog->bindParam(':id', $id);
-                  $insertLog->bindParam(':user', $username);
-                  $insertLog->bindParam(':action', $action);
-                  $insertLog->bindParam(':logDate', $d);
-                  $insertLog->bindParam(':logTime', $t);
-                  $insertLog->execute();
-               }
-            } else if ($_POST['position'] == 'Driver') {
-               $insert = $pdo->prepare("INSERT into driver_list(user_id ,driver_firstname,driver_middlename ,driver_lastname, driver_sufix, gender, plate_number, license, toda , mtop ) values(:id, :firstname, :middlename, :lastname, :suffix , :gender, :plateNumber, :license ,:toda, :mtop)");
-
-               $insert->bindParam(':id', $id);
-               $insert->bindParam(':firstname', $firstname);
-               $insert->bindParam(':middlename', $middlename);
-               $insert->bindParam(':lastname', $lastname);
-               $insert->bindParam(':suffix', $suffix);
-               $insert->bindParam(':gender', $gender);
-               $insert->bindParam(':plateNumber', $plateNumber);
-               $insert->bindParam(':license', $license);
-               $insert->bindParam(':toda', $toda);
-               $insert->bindParam(':mtop', $mtop);
-
-               if ($insert->execute()) {
-                  $insertLog = $pdo->prepare("INSERT INTO user_log(user_id, username, action, logDate, logTime) values(:id, :user, :action, :logDate, :logTime)");
-
-                  $insertLog->bindParam(':id', $id);
-                  $insertLog->bindParam(':user', $username);
-                  $insertLog->bindParam(':action', $action);
-                  $insertLog->bindParam(':logDate', $d);
-                  $insertLog->bindParam(':logTime', $t);
-                  $insertLog->execute();
-               }
+               $insertLog->bindParam(':id', $id);
+               $insertLog->bindParam(':user', $username);
+               $insertLog->bindParam(':action', $action);
+               $insertLog->bindParam(':logDate', $d);
+               $insertLog->bindParam(':logTime', $t);
+               $insertLog->execute();
             }
 
             echo '<script type="text/javascript">
@@ -229,7 +199,7 @@ include 'includes/head.php';
                               <h5 class="card-title text-center pb-0 fs-4">Create an Account</h5>
                               <p class="text-center small">Enter your personal details to create account</p>
                            </div>
-                           <form id="signupForm" class="row g-3" method="post" action="" novalidate>
+                           <form id="signupForm" class="row g-3" method="post" action="">
                               <div class="col-12">
                                  <label for="firstname" class="form-label">Firstname</label>
                                  <input type="text" name="firstname" class="form-control" id="firstname" required>
@@ -274,7 +244,7 @@ include 'includes/head.php';
                               </div>
                               <div class="col-12">
                                  <label for="phone" class="form-label">Phone Number</label>
-                                 <input type="text" name="phone" class="form-control" id="phone" required>
+                                 <input type="number" name="phone" class="form-control" id="phone" maxlength="11" required>
                                  <div class="invalid-feedback">Please enter a valid Email adddress!</div>
                               </div>
                               <div class="col-12">

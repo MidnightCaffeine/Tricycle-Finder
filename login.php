@@ -5,9 +5,9 @@
 <?php
 include_once 'lib/connection.php';
 session_start();
-if(isset($_SESSION['username'])){
+if (isset($_SESSION['username'])) {
    header("LOCATION: home.php");
- }
+}
 
 $page = 'Login';
 
@@ -32,7 +32,7 @@ if (isset($_POST['btn_login'])) {
       if ($row['email'] == $useremail or $row['username'] == $useremail) {
          $_SESSION['myid'] = $row['user_id'];
          $id = $row['user_id'];
-         $_SESSION['myID'] = $row['user_id']; 
+         $_SESSION['myID'] = $row['user_id'];
          $_SESSION['username'] = $row['username'];
          $_SESSION['email'] = $row['email'];
          $_SESSION['position'] = $row['position'];
@@ -99,8 +99,7 @@ if (isset($_POST['btn_login'])) {
               </script>';
 
 
-            header('refresh:1;home.php');
-         
+         header('refresh:1;home.php');
       }
    } else {
 
@@ -153,9 +152,14 @@ include 'includes/head.php';
                               </div>
                            </div>
                            <div class="col-12">
-                              <label for="yourPassword" class="form-label">Password</label>
-                              <input type="password" name="password" class="form-control" id="yourPassword" required>
-                              <div class="invalid-feedback">Please enter your password!</div>
+                              <label for="password" class="form-label">Password</label>
+                              <div class="input-group has-validation">
+                                 <input type="password" name="password" class="form-control" id="password" required>
+                                 <span class="input-group-text" id="inputGroupPrepend">
+                                    <i class="bi bi-eye-slash" id="togglePassword"></i>
+                                 </span>
+                                 <div class="invalid-feedback">Please enter your password!</div>
+                              </div>
                            </div>
                            <div class="col-12"> <button class="btn btn-primary w-100" type="submit" name="btn_login">Login</button></div>
                            <div class="col-12">
@@ -183,6 +187,21 @@ include 'includes/head.php';
 <script src="assets/js/main.js"></script>
 <script src="assets/js/icheck.min.js"></script>
 <script src="assets/js/sweetalert.js"></script>
+
+<script>
+   const togglePassword = document.querySelector("#togglePassword");
+   const password = document.querySelector("#password");
+
+   togglePassword.addEventListener("click", function() {
+
+      // toggle the type attribute
+      const type = password.getAttribute("type") === "password" ? "text" : "password";
+      password.setAttribute("type", type);
+      // toggle the eye icon
+      this.classList.toggle('bi-eye');
+      this.classList.toggle('bi-eye-slash');
+   });
+</script>
 
 </body>
 
