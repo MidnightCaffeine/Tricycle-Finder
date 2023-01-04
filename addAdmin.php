@@ -271,7 +271,7 @@ button: "Ok",
 
                                         <div class="col-12">
                                             <label for="phone" class="form-label">Phone Number</label>
-                                            <input type="text" name="phone" class="form-control" id="phone" required>
+                                            <input type="text" name="phone" class="form-control" id="phone" onkeypress="return checkNumber(event)" maxlength="11" required>
                                         </div>
 
                                         <div class="col-12 mb-3">
@@ -314,6 +314,18 @@ button: "Ok",
             this.classList.toggle('bi-eye');
             this.classList.toggle('bi-eye-slash');
         });
+    </script>
+
+    <script>
+        function checkNumber(event) {
+
+            var aCode = event.which ? event.which : event.keyCode;
+
+            if (aCode > 31 && (aCode < 48 || aCode > 57)) return false;
+
+            return true;
+
+        }
     </script>
 </body>
 

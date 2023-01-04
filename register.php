@@ -244,7 +244,7 @@ include 'includes/head.php';
                               </div>
                               <div class="col-12">
                                  <label for="phone" class="form-label">Phone Number</label>
-                                 <input maxlength = "11" type="text" name="phone" class="form-control" id="phone" onkeypress="return checkNumber(event)" required>
+                                 <input maxlength="11" type="text" name="phone" class="form-control" id="phone" onkeypress="return checkNumber(event)" required>
                                  <div class="invalid-feedback">Please enter a valid Email adddress!</div>
                               </div>
                               <div class="col-12">
@@ -327,7 +327,7 @@ include 'includes/head.php';
    <script src="assets/js/main.js"></script>
    <script src="assets/js/icheck.min.js"></script>
    <script src="assets/js/sweetalert.js"></script>
-  
+
    <!--
    <script>
       const el = document.getElementById('position');
@@ -359,7 +359,7 @@ include 'includes/head.php';
          this.classList.toggle('bi-eye-slash');
       });
    </script>
-      <script>
+   <script>
       function checkNumber(event) {
 
          var aCode = event.which ? event.which : event.keyCode;
