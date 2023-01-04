@@ -244,7 +244,7 @@ include 'includes/head.php';
                               </div>
                               <div class="col-12">
                                  <label for="phone" class="form-label">Phone Number</label>
-                                 <input type="number" name="phone" class="form-control" id="phone" maxlength="11" required>
+                                 <input maxlength = "11" type="text" name="phone" class="form-control" id="phone" onkeypress="return checkNumber(event)" required>
                                  <div class="invalid-feedback">Please enter a valid Email adddress!</div>
                               </div>
                               <div class="col-12">
@@ -327,7 +327,8 @@ include 'includes/head.php';
    <script src="assets/js/main.js"></script>
    <script src="assets/js/icheck.min.js"></script>
    <script src="assets/js/sweetalert.js"></script>
-
+  
+   <!--
    <script>
       const el = document.getElementById('position');
 
@@ -342,6 +343,7 @@ include 'includes/head.php';
          }
       });
    </script>
+   -->
 
    <script>
       const togglePassword = document.querySelector("#togglePassword");
@@ -356,6 +358,17 @@ include 'includes/head.php';
          this.classList.toggle('bi-eye');
          this.classList.toggle('bi-eye-slash');
       });
+   </script>
+      <script>
+      function checkNumber(event) {
+
+         var aCode = event.which ? event.which : event.keyCode;
+
+         if (aCode > 31 && (aCode < 48 || aCode > 57)) return false;
+
+         return true;
+
+      }
    </script>
 
 </body>
