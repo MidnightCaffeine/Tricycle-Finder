@@ -38,15 +38,6 @@ if (isset($_POST['btn_login'])) {
          $_SESSION['position'] = $row['position'];
          $_SESSION['status'] = '';
 
-         $insertLog = $pdo->prepare("INSERT INTO user_log(user_id, username, action, logDate, logTime) values(:id, :user, :action, :logDate, :logTime)");
-
-         $insertLog->bindParam(':id', $id);
-         $insertLog->bindParam(':user', $useremail);
-         $insertLog->bindParam(':action', $action);
-         $insertLog->bindParam(':logDate', $d);
-         $insertLog->bindParam(':logTime', $t);
-         $insertLog->execute();
-
          if ($row["position"] == "User") {
             $selectYou = $pdo->prepare("SELECT * from `client_list` where user_id = '$id'");
             $selectYou->execute();
@@ -70,17 +61,15 @@ if (isset($_POST['btn_login'])) {
             }
             $_SESSION['fullname'] = $firstname . " " . $mname . " " . $lname;
          } elseif ($row["position"] == "TODA-Admin") {
-            $selectYou = $pdo->prepare("SELECT * from `driver_list` where user_id = '$id'");
+            $selectYou = $pdo->prepare("SELECT * from `admin_toda` where admin_id = '$id'");
             $selectYou->execute();
             while ($row = $selectYou->fetch(PDO::FETCH_ASSOC)) {
-               $firstname = $row["driver_firstname"];
-               $mname = $row["driver_middlename"];
-               $lname = $row["driver_lastname"];
                $toda = $row['toda'];
-               $id = $row['user_id'];
+               $id = $row['admin_id'];
+               $_SESSION['toda'] = $toda;
             }
-            $_SESSION['fullname'] = $firstname . " " . $mname . " " . $lname;
-            $_SESSION['toda'] = $toda;
+            $_SESSION['fullname'] = 'Admin -TODA';
+
          } else {
             $_SESSION['fullname'] = "Super Admin";
          }

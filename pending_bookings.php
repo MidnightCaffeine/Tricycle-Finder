@@ -54,7 +54,15 @@ include 'includes/side_nav.php';
                         <th scope="col">Plate Number</th>
                         <th scope="col">MTOP</th>
                         <th scope="col">TODA</th>
-                        <th scope="col">Action</th>
+
+                        <?php
+                            if ($_SESSION['position'] == 'User' || $_SESSION['position'] == 'Driver') {
+                        ?>
+                            <th scope="col">Action</th>
+                        <?php
+                            }
+                        ?>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -66,7 +74,7 @@ include 'includes/side_nav.php';
                         $select = $pdo->prepare("SELECT * FROM `bookings` WHERE `booking_status` = 'pending' AND `client_name` = '$name' ORDER BY booking_id ASC");
                     } elseif ($_SESSION['position'] == 'Driver') {
                         $select = $pdo->prepare("SELECT * FROM `bookings` WHERE `booking_status` = 'pending' AND `driver_name` = '$name' ORDER BY booking_id ASC");
-                    }else{
+                    } else {
                         $select = $pdo->prepare("SELECT * FROM `bookings` WHERE `booking_status` = 'pending' ORDER BY booking_id ASC");
                     }
 
@@ -92,7 +100,7 @@ include 'includes/side_nav.php';
                                 <td>
                                     <?php
                                     if ($_SESSION['position'] == 'Driver') { ?>
-                                        <a type="submit" href="driver_map.php?id=<?php echo $row['booking_id'];?>&originLat=<?php echo $row['origin_latitude'];?>&originLng=<?php echo $row['origin_longitude'];?>&destLat=<?php echo $row['destination_latitude'];?>&destLng=<?php echo $row['destination_longitude'];?>" name="completeBooking" class="btn btn-dark" data-toggle="tooltip" title="Complete">
+                                        <a type="submit" href="driver_map.php?id=<?php echo $row['booking_id']; ?>&originLat=<?php echo $row['origin_latitude']; ?>&originLng=<?php echo $row['origin_longitude']; ?>&destLat=<?php echo $row['destination_latitude']; ?>&destLng=<?php echo $row['destination_longitude']; ?>" name="completeBooking" class="btn btn-dark" data-toggle="tooltip" title="Complete">
                                             <i class="bi bi-pin-map-fill"></i>
                                             View Map
                                         </a>
